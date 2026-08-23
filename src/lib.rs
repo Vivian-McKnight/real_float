@@ -15,162 +15,201 @@ pub struct Real<T>(pub T);
 
 // f32
 impl Real<f32> {
-    pub fn abs(self) -> Self {
+    #[must_use = "method returns a new number and does not mutate the original value"]
+    pub const fn abs(self) -> Self {
         Real(self.0.abs())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn acos(self) -> Self {
         Real(self.0.acos())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn acosh(self) -> Self {
         Real(self.0.acosh())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn asin(self) -> Self {
         Real(self.0.asin())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn asinh(self) -> Self {
         Real(self.0.asinh())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn atan(self) -> Self {
         Real(self.0.atan())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn atan2(self, other: Self) -> Self {
         Real(self.0.atan2(other.0))
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn atanh(self) -> Self {
         Real(self.0.atanh())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn cbrt(self) -> Self {
         Real(self.0.cbrt())
     }
 
-    pub fn ceil(self) -> Self {
+    #[must_use = "method returns a new number and does not mutate the original value"]
+    pub const fn ceil(self) -> Self {
         Real(self.0.ceil())
     }
 
-    pub fn clamp(self, min: Self, max: Self) -> Self {
+    #[must_use = "method returns a new number and does not mutate the original value"]
+    pub const fn clamp(self, min: Self, max: Self) -> Self {
         Real(self.0.clamp(min.0, max.0))
     }
 
-    pub fn classify(self) -> FpCategory {
+    #[must_use]
+    pub const fn classify(self) -> FpCategory {
         self.0.classify()
     }
 
-    pub fn copysign(self, sign: Self) -> Self {
+    #[must_use = "method returns a new number and does not mutate the original value"]
+    pub const fn copysign(self, sign: Self) -> Self {
         Real(self.0.copysign(sign.0))
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn cos(self) -> Self {
         Real(self.0.cos())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn cosh(self) -> Self {
         Real(self.0.cosh())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn div_euclid(self, rhs: Self) -> Self {
         Real(self.0.div_euclid(rhs.0))
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn exp(self) -> Self {
         Real(self.0.exp())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn exp2(self) -> Self {
         Real(self.0.exp2())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn exp_m1(self) -> Self {
         Real(self.0.exp_m1())
     }
 
-    pub fn floor(self) -> Self {
+    #[must_use = "method returns a new number and does not mutate the original value"]
+    pub const fn floor(self) -> Self {
         Real(self.0.floor())
     }
 
-    pub fn fract(self) -> Self {
+    #[must_use = "method returns a new number and does not mutate the original value"]
+    pub const fn fract(self) -> Self {
         Real(self.0.fract())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn hypot(self, other: Self) -> Self {
         Real(self.0.hypot(other.0))
     }
 
-    pub fn is_finite(self) -> bool {
+    #[must_use]
+    pub const fn is_finite(self) -> bool {
         self.0.is_finite()
     }
 
-    pub fn is_infinite(self) -> bool {
+    #[must_use]
+    pub const fn is_infinite(self) -> bool {
         self.0.is_infinite()
     }
 
-    pub fn is_nan(self) -> bool {
+    #[must_use]
+    pub const fn is_nan(self) -> bool {
         self.0.is_nan()
     }
 
-    pub fn is_normal(self) -> bool {
+    #[must_use]
+    pub const fn is_normal(self) -> bool {
         self.0.is_normal()
     }
 
-    pub fn is_sign_negative(self) -> bool {
+    #[must_use]
+    pub const fn is_sign_negative(self) -> bool {
         self.0.is_sign_negative()
     }
 
-    pub fn is_sign_positive(self) -> bool {
+    #[must_use]
+    pub const fn is_sign_positive(self) -> bool {
         self.0.is_sign_positive()
     }
 
-    pub fn is_subnormal(self) -> bool {
+    #[must_use]
+    pub const fn is_subnormal(self) -> bool {
         self.0.is_subnormal()
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn ln(self) -> Self {
         Real(self.0.ln())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn ln_1p(self) -> Self {
         Real(self.0.ln_1p())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn log(self, base: Self) -> Self {
         Real(self.0.log(base.0))
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn log2(self) -> Self {
         Real(self.0.log2())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn log10(self) -> Self {
         Real(self.0.log10())
     }
 
-    pub fn max(self, other: Self) -> Self {
+    #[must_use = "this returns the result of the comparison, without modifying either input"]
+    pub const fn max(self, other: Self) -> Self {
         Real(self.0.max(other.0))
     }
 
-    pub fn midpoint(self, other: Self) -> Self {
+    #[must_use = "this returns the result of the comparison, without modifying either input"]
+    pub const fn midpoint(self, other: Self) -> Self {
         Real(self.0.midpoint(other.0))
     }
 
-    pub fn min(self, other: Self) -> Self {
+    #[must_use = "this returns the result of the comparison, without modifying either input"]
+    pub const fn min(self, other: Self) -> Self {
         Real(self.0.min(other.0))
     }
 
-    pub fn mul_add(self, a: Self, b: Self) -> Self {
+    pub const fn mul_add(self, a: Self, b: Self) -> Self {
         Real(self.0.mul_add(a.0, b.0))
     }
 
-    pub fn next_down(self) -> Self {
+    #[must_use = "method returns a new number and does not mutate the original value"]
+    pub const fn next_down(self) -> Self {
         Real(self.0.next_down())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn next_up(self) -> Self {
         Real(self.0.next_up())
     }
@@ -183,7 +222,8 @@ impl Real<f32> {
         Real(self.0.powi(n))
     }
 
-    pub fn recip(self) -> Self {
+    #[must_use = "this returns the result of the operation, without modifying the original"]
+    pub const fn recip(self) -> Self {
         Real(self.0.recip())
     }
 
@@ -191,15 +231,16 @@ impl Real<f32> {
         Real(self.0.rem_euclid(rhs.0))
     }
 
-    pub fn round(self) -> Self {
+    pub const fn round(self) -> Self {
         Real(self.0.round())
     }
 
-    pub fn round_ties_even(self) -> Self {
+    pub const fn round_ties_even(self) -> Self {
         Real(self.0.round_ties_even())
     }
 
-    pub fn signum(self) -> Self {
+    #[must_use = "method returns a new number and does not mutate the original value"]
+    pub const fn signum(self) -> Self {
         Real(self.0.signum())
     }
 
@@ -228,35 +269,42 @@ impl Real<f32> {
         Real(self.0.tanh())
     }
 
-    pub fn to_be_bytes(self) -> [u8; 4] {
+    #[must_use = "this returns the result of the comparison, without modifying either input"]
+    pub const fn to_be_bytes(self) -> [u8; 4] {
         self.0.to_be_bytes()
     }
 
-    pub fn to_bits(self) -> u32 {
+    #[must_use = "this returns the result of the comparison, without modifying either input"]
+    pub const fn to_bits(self) -> u32 {
         self.0.to_bits()
     }
 
-    pub fn to_degrees(self) -> Self {
+    #[must_use = "this returns the result of the operation, without modifying the original"]
+    pub const fn to_degrees(self) -> Self {
         Real(self.0.to_degrees())
     }
 
-    pub fn to_le_bytes(self) -> [u8; 4] {
+    #[must_use = "this returns the result of the comparison, without modifying either input"]
+    pub const fn to_le_bytes(self) -> [u8; 4] {
         self.0.to_le_bytes()
     }
 
-    pub fn to_ne_bytes(self) -> [u8; 4] {
+    #[must_use = "this returns the result of the comparison, without modifying either input"]
+    pub const fn to_ne_bytes(self) -> [u8; 4] {
         self.0.to_ne_bytes()
     }
 
-    pub fn to_radians(self) -> Self {
+    #[must_use = "this returns the result of the operation, without modifying the original"]
+    pub const fn to_radians(self) -> Self {
         Real(self.0.to_radians())
     }
 
+    #[must_use]
     pub fn total_cmp(self, other: &Self) -> Ordering {
         self.0.total_cmp(&other.0)
     }
 
-    pub fn trunc(self) -> Self {
+    pub const fn trunc(self) -> Self {
         Real(self.0.trunc())
     }
 }
@@ -527,162 +575,201 @@ impl<'a> Product<&'a Real<f32>> for Real<f32> {
 
 // f64
 impl Real<f64> {
-    pub fn abs(self) -> Self {
+    #[must_use = "method returns a new number and does not mutate the original value"]
+    pub const fn abs(self) -> Self {
         Real(self.0.abs())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn acos(self) -> Self {
         Real(self.0.acos())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn acosh(self) -> Self {
         Real(self.0.acosh())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn asin(self) -> Self {
         Real(self.0.asin())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn asinh(self) -> Self {
         Real(self.0.asinh())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn atan(self) -> Self {
         Real(self.0.atan())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn atan2(self, other: Self) -> Self {
         Real(self.0.atan2(other.0))
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn atanh(self) -> Self {
         Real(self.0.atanh())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn cbrt(self) -> Self {
         Real(self.0.cbrt())
     }
 
-    pub fn ceil(self) -> Self {
+    #[must_use = "method returns a new number and does not mutate the original value"]
+    pub const fn ceil(self) -> Self {
         Real(self.0.ceil())
     }
 
-    pub fn clamp(self, min: Self, max: Self) -> Self {
+    #[must_use = "method returns a new number and does not mutate the original value"]
+    pub const fn clamp(self, min: Self, max: Self) -> Self {
         Real(self.0.clamp(min.0, max.0))
     }
 
-    pub fn classify(self) -> FpCategory {
+    #[must_use]
+    pub const fn classify(self) -> FpCategory {
         self.0.classify()
     }
 
-    pub fn copysign(self, sign: Self) -> Self {
+    #[must_use = "method returns a new number and does not mutate the original value"]
+    pub const fn copysign(self, sign: Self) -> Self {
         Real(self.0.copysign(sign.0))
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn cos(self) -> Self {
         Real(self.0.cos())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn cosh(self) -> Self {
         Real(self.0.cosh())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn div_euclid(self, rhs: Self) -> Self {
         Real(self.0.div_euclid(rhs.0))
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn exp(self) -> Self {
         Real(self.0.exp())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn exp2(self) -> Self {
         Real(self.0.exp2())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn exp_m1(self) -> Self {
         Real(self.0.exp_m1())
     }
 
-    pub fn floor(self) -> Self {
+    #[must_use = "method returns a new number and does not mutate the original value"]
+    pub const fn floor(self) -> Self {
         Real(self.0.floor())
     }
 
-    pub fn fract(self) -> Self {
+    #[must_use = "method returns a new number and does not mutate the original value"]
+    pub const fn fract(self) -> Self {
         Real(self.0.fract())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn hypot(self, other: Self) -> Self {
         Real(self.0.hypot(other.0))
     }
 
-    pub fn is_finite(self) -> bool {
+    #[must_use]
+    pub const fn is_finite(self) -> bool {
         self.0.is_finite()
     }
 
-    pub fn is_infinite(self) -> bool {
+    #[must_use]
+    pub const fn is_infinite(self) -> bool {
         self.0.is_infinite()
     }
 
-    pub fn is_nan(self) -> bool {
+    #[must_use]
+    pub const fn is_nan(self) -> bool {
         self.0.is_nan()
     }
 
-    pub fn is_normal(self) -> bool {
+    #[must_use]
+    pub const fn is_normal(self) -> bool {
         self.0.is_normal()
     }
 
-    pub fn is_sign_negative(self) -> bool {
+    #[must_use]
+    pub const fn is_sign_negative(self) -> bool {
         self.0.is_sign_negative()
     }
 
-    pub fn is_sign_positive(self) -> bool {
+    #[must_use]
+    pub const fn is_sign_positive(self) -> bool {
         self.0.is_sign_positive()
     }
 
-    pub fn is_subnormal(self) -> bool {
+    #[must_use]
+    pub const fn is_subnormal(self) -> bool {
         self.0.is_subnormal()
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn ln(self) -> Self {
         Real(self.0.ln())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn ln_1p(self) -> Self {
         Real(self.0.ln_1p())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn log(self, base: Self) -> Self {
         Real(self.0.log(base.0))
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn log2(self) -> Self {
         Real(self.0.log2())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn log10(self) -> Self {
         Real(self.0.log10())
     }
 
-    pub fn max(self, other: Self) -> Self {
+    #[must_use = "this returns the result of the comparison, without modifying either input"]
+    pub const fn max(self, other: Self) -> Self {
         Real(self.0.max(other.0))
     }
 
-    pub fn midpoint(self, other: Self) -> Self {
+    #[must_use = "this returns the result of the comparison, without modifying either input"]
+    pub const fn midpoint(self, other: Self) -> Self {
         Real(self.0.midpoint(other.0))
     }
 
-    pub fn min(self, other: Self) -> Self {
+    #[must_use = "this returns the result of the comparison, without modifying either input"]
+    pub const fn min(self, other: Self) -> Self {
         Real(self.0.min(other.0))
     }
 
-    pub fn mul_add(self, a: Self, b: Self) -> Self {
+    pub const fn mul_add(self, a: Self, b: Self) -> Self {
         Real(self.0.mul_add(a.0, b.0))
     }
 
-    pub fn next_down(self) -> Self {
+    #[must_use = "method returns a new number and does not mutate the original value"]
+    pub const fn next_down(self) -> Self {
         Real(self.0.next_down())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn next_up(self) -> Self {
         Real(self.0.next_up())
     }
@@ -695,7 +782,8 @@ impl Real<f64> {
         Real(self.0.powi(n))
     }
 
-    pub fn recip(self) -> Self {
+    #[must_use = "this returns the result of the operation, without modifying the original"]
+    pub const fn recip(self) -> Self {
         Real(self.0.recip())
     }
 
@@ -703,15 +791,16 @@ impl Real<f64> {
         Real(self.0.rem_euclid(rhs.0))
     }
 
-    pub fn round(self) -> Self {
+    pub const fn round(self) -> Self {
         Real(self.0.round())
     }
 
-    pub fn round_ties_even(self) -> Self {
+    pub const fn round_ties_even(self) -> Self {
         Real(self.0.round_ties_even())
     }
 
-    pub fn signum(self) -> Self {
+    #[must_use = "method returns a new number and does not mutate the original value"]
+    pub const fn signum(self) -> Self {
         Real(self.0.signum())
     }
 
@@ -740,35 +829,42 @@ impl Real<f64> {
         Real(self.0.tanh())
     }
 
-    pub fn to_be_bytes(self) -> [u8; 8] {
+    #[must_use = "this returns the result of the comparison, without modifying either input"]
+    pub const fn to_be_bytes(self) -> [u8; 8] {
         self.0.to_be_bytes()
     }
 
-    pub fn to_bits(self) -> u64 {
+    #[must_use = "this returns the result of the comparison, without modifying either input"]
+    pub const fn to_bits(self) -> u64 {
         self.0.to_bits()
     }
 
-    pub fn to_degrees(self) -> Self {
+    #[must_use = "this returns the result of the operation, without modifying the original"]
+    pub const fn to_degrees(self) -> Self {
         Real(self.0.to_degrees())
     }
 
-    pub fn to_le_bytes(self) -> [u8; 8] {
+    #[must_use = "this returns the result of the comparison, without modifying either input"]
+    pub const fn to_le_bytes(self) -> [u8; 8] {
         self.0.to_le_bytes()
     }
 
-    pub fn to_ne_bytes(self) -> [u8; 8] {
+    #[must_use = "this returns the result of the comparison, without modifying either input"]
+    pub const fn to_ne_bytes(self) -> [u8; 8] {
         self.0.to_ne_bytes()
     }
 
-    pub fn to_radians(self) -> Self {
+    #[must_use = "this returns the result of the operation, without modifying the original"]
+    pub const fn to_radians(self) -> Self {
         Real(self.0.to_radians())
     }
 
+    #[must_use]
     pub fn total_cmp(self, other: &Self) -> Ordering {
         self.0.total_cmp(&other.0)
     }
 
-    pub fn trunc(self) -> Self {
+    pub const fn trunc(self) -> Self {
         Real(self.0.trunc())
     }
 }
@@ -1035,10 +1131,4 @@ impl<'a> Product<&'a Real<f64>> for Real<f64> {
     {
         iter.fold(Real(1f64), |acc, x| acc * x)
     }
-}
-
-fn test() {
-    let mut x = Real(0f32);
-    let y = Real(2f32);
-    // x += y;
 }
