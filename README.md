@@ -1,0 +1,1 @@
+Wrapper type over floating point numbers that treats them like real numbers. This allows the Rust compiler to exploit algebraic properties of the real numbers like associativity etc. This can result in shallower dependency depth in the output assembly code, or in the case of loops can help the compiler to perform SIMD vectorisation.
