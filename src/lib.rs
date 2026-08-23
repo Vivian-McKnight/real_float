@@ -9,7 +9,9 @@ use core::{
 /// the compiler to exploit algebraic properties of the real numbers like associativity etc.
 /// This can result in shallower dependency depth in the output assembly code, or in the case
 /// of loops can help the compiler to perform SIMD vectorisation.
+
 #[repr(transparent)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Default)]
 pub struct Real<T>(pub T);
 
