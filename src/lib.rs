@@ -270,7 +270,7 @@ impl Add<Real<f32>> for Real<f32> {
 }
 
 impl Add<&Real<f32>> for Real<f32> {
-    type Output = Real<f32>;
+    type Output = <Real<f32> as Add>::Output;
 
     fn add(self, rhs: &Real<f32>) -> Self::Output {
         self + *rhs
@@ -278,7 +278,7 @@ impl Add<&Real<f32>> for Real<f32> {
 }
 
 impl Add<Real<f32>> for &Real<f32> {
-    type Output = Real<f32>;
+    type Output = <Real<f32> as Add>::Output;
 
     fn add(self, rhs: Real<f32>) -> Self::Output {
         *self + rhs
@@ -286,7 +286,7 @@ impl Add<Real<f32>> for &Real<f32> {
 }
 
 impl Add<&Real<f32>> for &Real<f32> {
-    type Output = Real<f32>;
+    type Output = <Real<f32> as Add>::Output;
 
     fn add(self, rhs: &Real<f32>) -> Self::Output {
         *self + *rhs
@@ -314,7 +314,7 @@ impl Sub<Real<f32>> for Real<f32> {
 }
 
 impl Sub<&Real<f32>> for Real<f32> {
-    type Output = Real<f32>;
+    type Output = <Real<f32> as Sub>::Output;
 
     fn sub(self, rhs: &Real<f32>) -> Self::Output {
         self + *rhs
@@ -322,7 +322,7 @@ impl Sub<&Real<f32>> for Real<f32> {
 }
 
 impl Sub<Real<f32>> for &Real<f32> {
-    type Output = Real<f32>;
+    type Output = <Real<f32> as Sub>::Output;
 
     fn sub(self, rhs: Real<f32>) -> Self::Output {
         *self + rhs
@@ -330,7 +330,7 @@ impl Sub<Real<f32>> for &Real<f32> {
 }
 
 impl Sub<&Real<f32>> for &Real<f32> {
-    type Output = Real<f32>;
+    type Output = <Real<f32> as Sub>::Output;
 
     fn sub(self, rhs: &Real<f32>) -> Self::Output {
         *self + *rhs
@@ -358,7 +358,7 @@ impl Mul<Real<f32>> for Real<f32> {
 }
 
 impl Mul<&Real<f32>> for Real<f32> {
-    type Output = Real<f32>;
+    type Output = <Real<f32> as Mul>::Output;
 
     fn mul(self, rhs: &Real<f32>) -> Self::Output {
         self + *rhs
@@ -366,7 +366,7 @@ impl Mul<&Real<f32>> for Real<f32> {
 }
 
 impl Mul<Real<f32>> for &Real<f32> {
-    type Output = Real<f32>;
+    type Output = <Real<f32> as Mul>::Output;
 
     fn mul(self, rhs: Real<f32>) -> Self::Output {
         *self + rhs
@@ -374,7 +374,7 @@ impl Mul<Real<f32>> for &Real<f32> {
 }
 
 impl Mul<&Real<f32>> for &Real<f32> {
-    type Output = Real<f32>;
+    type Output = <Real<f32> as Mul>::Output;
 
     fn mul(self, rhs: &Real<f32>) -> Self::Output {
         *self + *rhs
@@ -402,7 +402,7 @@ impl Div<Real<f32>> for Real<f32> {
 }
 
 impl Div<&Real<f32>> for Real<f32> {
-    type Output = Real<f32>;
+    type Output = <Real<f32> as Div>::Output;
 
     fn div(self, rhs: &Real<f32>) -> Self::Output {
         self + *rhs
@@ -410,7 +410,7 @@ impl Div<&Real<f32>> for Real<f32> {
 }
 
 impl Div<Real<f32>> for &Real<f32> {
-    type Output = Real<f32>;
+    type Output = <Real<f32> as Div>::Output;
 
     fn div(self, rhs: Real<f32>) -> Self::Output {
         *self + rhs
@@ -418,7 +418,7 @@ impl Div<Real<f32>> for &Real<f32> {
 }
 
 impl Div<&Real<f32>> for &Real<f32> {
-    type Output = Real<f32>;
+    type Output = <Real<f32> as Div>::Output;
 
     fn div(self, rhs: &Real<f32>) -> Self::Output {
         *self + *rhs
@@ -446,7 +446,7 @@ impl Rem<Real<f32>> for Real<f32> {
 }
 
 impl Rem<&Real<f32>> for Real<f32> {
-    type Output = Real<f32>;
+    type Output = <Real<f32> as Rem>::Output;
 
     fn rem(self, rhs: &Real<f32>) -> Self::Output {
         self + *rhs
@@ -454,7 +454,7 @@ impl Rem<&Real<f32>> for Real<f32> {
 }
 
 impl Rem<Real<f32>> for &Real<f32> {
-    type Output = Real<f32>;
+    type Output = <Real<f32> as Rem>::Output;
 
     fn rem(self, rhs: Real<f32>) -> Self::Output {
         *self + rhs
@@ -462,7 +462,7 @@ impl Rem<Real<f32>> for &Real<f32> {
 }
 
 impl Rem<&Real<f32>> for &Real<f32> {
-    type Output = Real<f32>;
+    type Output = <Real<f32> as Rem>::Output;
 
     fn rem(self, rhs: &Real<f32>) -> Self::Output {
         *self + *rhs
@@ -490,25 +490,37 @@ impl Neg for Real<f32> {
 }
 
 impl Sum<Real<f32>> for Real<f32> {
-    fn sum<I: Iterator<Item = Real<f32>>>(iter: I) -> Real<f32> {
+    fn sum<I>(iter: I) -> Real<f32>
+    where
+        I: Iterator<Item = Real<f32>>,
+    {
         iter.fold(Real(0f32), |acc, x| acc + x)
     }
 }
 
 impl<'a> Sum<&'a Real<f32>> for Real<f32> {
-    fn sum<I: Iterator<Item = &'a Real<f32>>>(iter: I) -> Real<f32> {
+    fn sum<I>(iter: I) -> Real<f32>
+    where
+        I: Iterator<Item = &'a Real<f32>>,
+    {
         iter.fold(Real(0f32), |acc, x| acc + x)
     }
 }
 
 impl Product<Real<f32>> for Real<f32> {
-    fn product<I: Iterator<Item = Real<f32>>>(iter: I) -> Real<f32> {
+    fn product<I>(iter: I) -> Real<f32>
+    where
+        I: Iterator<Item = Real<f32>>,
+    {
         iter.fold(Real(1f32), |acc, x| acc * x)
     }
 }
 
 impl<'a> Product<&'a Real<f32>> for Real<f32> {
-    fn product<I: Iterator<Item = &'a Real<f32>>>(iter: I) -> Real<f32> {
+    fn product<I>(iter: I) -> Real<f32>
+    where
+        I: Iterator<Item = &'a Real<f32>>,
+    {
         iter.fold(Real(1f32), |acc, x| acc * x)
     }
 }
@@ -770,7 +782,7 @@ impl Add<Real<f64>> for Real<f64> {
 }
 
 impl Add<&Real<f64>> for Real<f64> {
-    type Output = Real<f64>;
+    type Output = <Real<f64> as Add>::Output;
 
     fn add(self, rhs: &Real<f64>) -> Self::Output {
         self + *rhs
@@ -778,7 +790,7 @@ impl Add<&Real<f64>> for Real<f64> {
 }
 
 impl Add<Real<f64>> for &Real<f64> {
-    type Output = Real<f64>;
+    type Output = <Real<f64> as Add>::Output;
 
     fn add(self, rhs: Real<f64>) -> Self::Output {
         *self + rhs
@@ -786,7 +798,7 @@ impl Add<Real<f64>> for &Real<f64> {
 }
 
 impl Add<&Real<f64>> for &Real<f64> {
-    type Output = Real<f64>;
+    type Output = <Real<f64> as Add>::Output;
 
     fn add(self, rhs: &Real<f64>) -> Self::Output {
         *self + *rhs
@@ -814,7 +826,7 @@ impl Sub<Real<f64>> for Real<f64> {
 }
 
 impl Sub<&Real<f64>> for Real<f64> {
-    type Output = Real<f64>;
+    type Output = <Real<f64> as Sub>::Output;
 
     fn sub(self, rhs: &Real<f64>) -> Self::Output {
         self + *rhs
@@ -822,7 +834,7 @@ impl Sub<&Real<f64>> for Real<f64> {
 }
 
 impl Sub<Real<f64>> for &Real<f64> {
-    type Output = Real<f64>;
+    type Output = <Real<f64> as Sub>::Output;
 
     fn sub(self, rhs: Real<f64>) -> Self::Output {
         *self + rhs
@@ -830,7 +842,7 @@ impl Sub<Real<f64>> for &Real<f64> {
 }
 
 impl Sub<&Real<f64>> for &Real<f64> {
-    type Output = Real<f64>;
+    type Output = <Real<f64> as Sub>::Output;
 
     fn sub(self, rhs: &Real<f64>) -> Self::Output {
         *self + *rhs
@@ -858,7 +870,7 @@ impl Mul<Real<f64>> for Real<f64> {
 }
 
 impl Mul<&Real<f64>> for Real<f64> {
-    type Output = Real<f64>;
+    type Output = <Real<f64> as Mul>::Output;
 
     fn mul(self, rhs: &Real<f64>) -> Self::Output {
         self + *rhs
@@ -866,7 +878,7 @@ impl Mul<&Real<f64>> for Real<f64> {
 }
 
 impl Mul<Real<f64>> for &Real<f64> {
-    type Output = Real<f64>;
+    type Output = <Real<f64> as Mul>::Output;
 
     fn mul(self, rhs: Real<f64>) -> Self::Output {
         *self + rhs
@@ -874,7 +886,7 @@ impl Mul<Real<f64>> for &Real<f64> {
 }
 
 impl Mul<&Real<f64>> for &Real<f64> {
-    type Output = Real<f64>;
+    type Output = <Real<f64> as Mul>::Output;
 
     fn mul(self, rhs: &Real<f64>) -> Self::Output {
         *self + *rhs
@@ -902,7 +914,7 @@ impl Div<Real<f64>> for Real<f64> {
 }
 
 impl Div<&Real<f64>> for Real<f64> {
-    type Output = Real<f64>;
+    type Output = <Real<f64> as Div>::Output;
 
     fn div(self, rhs: &Real<f64>) -> Self::Output {
         self + *rhs
@@ -910,7 +922,7 @@ impl Div<&Real<f64>> for Real<f64> {
 }
 
 impl Div<Real<f64>> for &Real<f64> {
-    type Output = Real<f64>;
+    type Output = <Real<f64> as Div>::Output;
 
     fn div(self, rhs: Real<f64>) -> Self::Output {
         *self + rhs
@@ -918,7 +930,7 @@ impl Div<Real<f64>> for &Real<f64> {
 }
 
 impl Div<&Real<f64>> for &Real<f64> {
-    type Output = Real<f64>;
+    type Output = <Real<f64> as Div>::Output;
 
     fn div(self, rhs: &Real<f64>) -> Self::Output {
         *self + *rhs
@@ -946,7 +958,7 @@ impl Rem<Real<f64>> for Real<f64> {
 }
 
 impl Rem<&Real<f64>> for Real<f64> {
-    type Output = Real<f64>;
+    type Output = <Real<f64> as Rem>::Output;
 
     fn rem(self, rhs: &Real<f64>) -> Self::Output {
         self + *rhs
@@ -954,7 +966,7 @@ impl Rem<&Real<f64>> for Real<f64> {
 }
 
 impl Rem<Real<f64>> for &Real<f64> {
-    type Output = Real<f64>;
+    type Output = <Real<f64> as Rem>::Output;
 
     fn rem(self, rhs: Real<f64>) -> Self::Output {
         *self + rhs
@@ -962,7 +974,7 @@ impl Rem<Real<f64>> for &Real<f64> {
 }
 
 impl Rem<&Real<f64>> for &Real<f64> {
-    type Output = Real<f64>;
+    type Output = <Real<f64> as Rem>::Output;
 
     fn rem(self, rhs: &Real<f64>) -> Self::Output {
         *self + *rhs
@@ -990,25 +1002,37 @@ impl Neg for Real<f64> {
 }
 
 impl Sum<Real<f64>> for Real<f64> {
-    fn sum<I: Iterator<Item = Real<f64>>>(iter: I) -> Real<f64> {
+    fn sum<I>(iter: I) -> Real<f64>
+    where
+        I: Iterator<Item = Real<f64>>,
+    {
         iter.fold(Real(0f64), |acc, x| acc + x)
     }
 }
 
 impl<'a> Sum<&'a Real<f64>> for Real<f64> {
-    fn sum<I: Iterator<Item = &'a Real<f64>>>(iter: I) -> Real<f64> {
+    fn sum<I>(iter: I) -> Real<f64>
+    where
+        I: Iterator<Item = &'a Real<f64>>,
+    {
         iter.fold(Real(0f64), |acc, x| acc + x)
     }
 }
 
 impl Product<Real<f64>> for Real<f64> {
-    fn product<I: Iterator<Item = Real<f64>>>(iter: I) -> Real<f64> {
+    fn product<I>(iter: I) -> Real<f64>
+    where
+        I: Iterator<Item = Real<f64>>,
+    {
         iter.fold(Real(1f64), |acc, x| acc * x)
     }
 }
 
 impl<'a> Product<&'a Real<f64>> for Real<f64> {
-    fn product<I: Iterator<Item = &'a Real<f64>>>(iter: I) -> Real<f64> {
+    fn product<I>(iter: I) -> Real<f64>
+    where
+        I: Iterator<Item = &'a Real<f64>>,
+    {
         iter.fold(Real(1f64), |acc, x| acc * x)
     }
 }
