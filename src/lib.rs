@@ -1,3 +1,6 @@
+#[cfg(feature = "num")]
+pub mod num;
+
 use core::{
     cmp::Ordering,
     iter::{Product, Sum},
@@ -9,7 +12,6 @@ use core::{
 /// the compiler to exploit algebraic properties of the real numbers like associativity etc.
 /// This can result in shallower dependency depth in the output assembly code, or in the case
 /// of loops can help the compiler to perform SIMD vectorisation.
-
 #[repr(transparent)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Default)]
@@ -202,6 +204,7 @@ impl Real<f32> {
         Real(self.0.min(other.0))
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub const fn mul_add(self, a: Self, b: Self) -> Self {
         Real(self.0.mul_add(a.0, b.0))
     }
@@ -216,10 +219,12 @@ impl Real<f32> {
         Real(self.0.next_up())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn powf(self, n: Self) -> Self {
         Real(self.0.powf(n.0))
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn powi(self, n: i32) -> Self {
         Real(self.0.powi(n))
     }
@@ -229,14 +234,17 @@ impl Real<f32> {
         Real(self.0.recip())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn rem_euclid(self, rhs: Self) -> Self {
         Real(self.0.rem_euclid(rhs.0))
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub const fn round(self) -> Self {
         Real(self.0.round())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub const fn round_ties_even(self) -> Self {
         Real(self.0.round_ties_even())
     }
@@ -246,27 +254,33 @@ impl Real<f32> {
         Real(self.0.signum())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn sin(self) -> Self {
         Real(self.0.sin())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn sin_cos(self) -> (Self, Self) {
         let (s, c) = self.0.sin_cos();
         (Real(s), Real(c))
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn sinh(self) -> Self {
         Real(self.0.sinh())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn sqrt(self) -> Self {
         Real(self.0.sqrt())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn tan(self) -> Self {
         Real(self.0.tan())
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub fn tanh(self) -> Self {
         Real(self.0.tanh())
     }
@@ -306,6 +320,7 @@ impl Real<f32> {
         self.0.total_cmp(&other.0)
     }
 
+    #[must_use = "method returns a new number and does not mutate the original value"]
     pub const fn trunc(self) -> Self {
         Real(self.0.trunc())
     }
@@ -544,7 +559,7 @@ impl Sum<Real<f32>> for Real<f32> {
     where
         I: Iterator<Item = Real<f32>>,
     {
-        iter.fold(Real(0f32), |acc, x| acc + x)
+        iter.fold(Real(0.0), |acc, x| acc + x)
     }
 }
 
@@ -553,7 +568,7 @@ impl<'a> Sum<&'a Real<f32>> for Real<f32> {
     where
         I: Iterator<Item = &'a Real<f32>>,
     {
-        iter.fold(Real(0f32), |acc, x| acc + x)
+        iter.fold(Real(0.0), |acc, x| acc + x)
     }
 }
 
@@ -562,7 +577,7 @@ impl Product<Real<f32>> for Real<f32> {
     where
         I: Iterator<Item = Real<f32>>,
     {
-        iter.fold(Real(1f32), |acc, x| acc * x)
+        iter.fold(Real(1.0), |acc, x| acc * x)
     }
 }
 
@@ -571,7 +586,7 @@ impl<'a> Product<&'a Real<f32>> for Real<f32> {
     where
         I: Iterator<Item = &'a Real<f32>>,
     {
-        iter.fold(Real(1f32), |acc, x| acc * x)
+        iter.fold(Real(1.0), |acc, x| acc * x)
     }
 }
 
@@ -1104,7 +1119,7 @@ impl Sum<Real<f64>> for Real<f64> {
     where
         I: Iterator<Item = Real<f64>>,
     {
-        iter.fold(Real(0f64), |acc, x| acc + x)
+        iter.fold(Real(0.0), |acc, x| acc + x)
     }
 }
 
@@ -1113,7 +1128,7 @@ impl<'a> Sum<&'a Real<f64>> for Real<f64> {
     where
         I: Iterator<Item = &'a Real<f64>>,
     {
-        iter.fold(Real(0f64), |acc, x| acc + x)
+        iter.fold(Real(0.0), |acc, x| acc + x)
     }
 }
 
@@ -1122,7 +1137,7 @@ impl Product<Real<f64>> for Real<f64> {
     where
         I: Iterator<Item = Real<f64>>,
     {
-        iter.fold(Real(1f64), |acc, x| acc * x)
+        iter.fold(Real(1.0), |acc, x| acc * x)
     }
 }
 
@@ -1131,6 +1146,6 @@ impl<'a> Product<&'a Real<f64>> for Real<f64> {
     where
         I: Iterator<Item = &'a Real<f64>>,
     {
-        iter.fold(Real(1f64), |acc, x| acc * x)
+        iter.fold(Real(1.0), |acc, x| acc * x)
     }
 }
