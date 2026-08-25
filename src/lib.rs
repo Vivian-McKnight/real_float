@@ -7,6 +7,7 @@ use core::{
     num::FpCategory,
     ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Rem, RemAssign, Sub, SubAssign},
 };
+use duplicate::{duplicate, duplicate_item};
 
 /// Wrapper type over floating point numbers that treats them like real numbers. This allows
 /// the compiler to exploit algebraic properties of the real numbers like associativity etc.
@@ -17,8 +18,12 @@ use core::{
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Default)]
 pub struct Real<T>(pub T);
 
-// f32
-impl Real<f32> {
+#[duplicate_item(
+    impl_type to_bits_type byte_length;
+    [f32]     [u32]        [4];
+    [f64]     [u64]        [8];
+)]
+impl Real<impl_type> {
     #[must_use = "method returns a new number and does not mutate the original value"]
     pub const fn abs(self) -> Self {
         Real(self.0.abs())
@@ -286,12 +291,12 @@ impl Real<f32> {
     }
 
     #[must_use = "this returns the result of the comparison, without modifying either input"]
-    pub const fn to_be_bytes(self) -> [u8; 4] {
+    pub const fn to_be_bytes(self) -> [u8; byte_length] {
         self.0.to_be_bytes()
     }
 
     #[must_use = "this returns the result of the comparison, without modifying either input"]
-    pub const fn to_bits(self) -> u32 {
+    pub const fn to_bits(self) -> to_bits_type {
         self.0.to_bits()
     }
 
@@ -301,12 +306,12 @@ impl Real<f32> {
     }
 
     #[must_use = "this returns the result of the comparison, without modifying either input"]
-    pub const fn to_le_bytes(self) -> [u8; 4] {
+    pub const fn to_le_bytes(self) -> [u8; byte_length] {
         self.0.to_le_bytes()
     }
 
     #[must_use = "this returns the result of the comparison, without modifying either input"]
-    pub const fn to_ne_bytes(self) -> [u8; 4] {
+    pub const fn to_ne_bytes(self) -> [u8; byte_length] {
         self.0.to_ne_bytes()
     }
 
@@ -323,829 +328,274 @@ impl Real<f32> {
     #[must_use = "method returns a new number and does not mutate the original value"]
     pub const fn trunc(self) -> Self {
         Real(self.0.trunc())
-    }
-}
-
-impl Add<Real<f32>> for Real<f32> {
-    type Output = Real<f32>;
-
-    fn add(self, rhs: Real<f32>) -> Self::Output {
-        Real(self.0.algebraic_add(rhs.0))
-    }
-}
-
-impl Add<&Real<f32>> for Real<f32> {
-    type Output = <Real<f32> as Add>::Output;
-
-    fn add(self, rhs: &Real<f32>) -> Self::Output {
-        self + *rhs
-    }
-}
-
-impl Add<Real<f32>> for &Real<f32> {
-    type Output = <Real<f32> as Add>::Output;
-
-    fn add(self, rhs: Real<f32>) -> Self::Output {
-        *self + rhs
-    }
-}
-
-impl Add<&Real<f32>> for &Real<f32> {
-    type Output = <Real<f32> as Add>::Output;
-
-    fn add(self, rhs: &Real<f32>) -> Self::Output {
-        *self + *rhs
-    }
-}
-
-impl AddAssign<Real<f32>> for Real<f32> {
-    fn add_assign(&mut self, rhs: Real<f32>) {
-        *self = *self + rhs
-    }
-}
-
-impl AddAssign<&Real<f32>> for Real<f32> {
-    fn add_assign(&mut self, rhs: &Real<f32>) {
-        *self = *self + *rhs
-    }
-}
-
-impl Sub<Real<f32>> for Real<f32> {
-    type Output = Real<f32>;
-
-    fn sub(self, rhs: Real<f32>) -> Self::Output {
-        Real(self.0.algebraic_sub(rhs.0))
-    }
-}
-
-impl Sub<&Real<f32>> for Real<f32> {
-    type Output = <Real<f32> as Sub>::Output;
-
-    fn sub(self, rhs: &Real<f32>) -> Self::Output {
-        self + *rhs
-    }
-}
-
-impl Sub<Real<f32>> for &Real<f32> {
-    type Output = <Real<f32> as Sub>::Output;
-
-    fn sub(self, rhs: Real<f32>) -> Self::Output {
-        *self + rhs
-    }
-}
-
-impl Sub<&Real<f32>> for &Real<f32> {
-    type Output = <Real<f32> as Sub>::Output;
-
-    fn sub(self, rhs: &Real<f32>) -> Self::Output {
-        *self + *rhs
-    }
-}
-
-impl SubAssign<Real<f32>> for Real<f32> {
-    fn sub_assign(&mut self, rhs: Real<f32>) {
-        *self = *self - rhs
-    }
-}
-
-impl SubAssign<&Real<f32>> for Real<f32> {
-    fn sub_assign(&mut self, rhs: &Real<f32>) {
-        *self = *self - *rhs
-    }
-}
-
-impl Mul<Real<f32>> for Real<f32> {
-    type Output = Real<f32>;
-
-    fn mul(self, rhs: Real<f32>) -> Self::Output {
-        Real(self.0.algebraic_mul(rhs.0))
-    }
-}
-
-impl Mul<&Real<f32>> for Real<f32> {
-    type Output = <Real<f32> as Mul>::Output;
-
-    fn mul(self, rhs: &Real<f32>) -> Self::Output {
-        self + *rhs
-    }
-}
-
-impl Mul<Real<f32>> for &Real<f32> {
-    type Output = <Real<f32> as Mul>::Output;
-
-    fn mul(self, rhs: Real<f32>) -> Self::Output {
-        *self + rhs
-    }
-}
-
-impl Mul<&Real<f32>> for &Real<f32> {
-    type Output = <Real<f32> as Mul>::Output;
-
-    fn mul(self, rhs: &Real<f32>) -> Self::Output {
-        *self + *rhs
-    }
-}
-
-impl MulAssign<Real<f32>> for Real<f32> {
-    fn mul_assign(&mut self, rhs: Real<f32>) {
-        *self = *self * rhs
-    }
-}
-
-impl MulAssign<&Real<f32>> for Real<f32> {
-    fn mul_assign(&mut self, rhs: &Real<f32>) {
-        *self = *self * *rhs
-    }
-}
-
-impl Div<Real<f32>> for Real<f32> {
-    type Output = Real<f32>;
-
-    fn div(self, rhs: Real<f32>) -> Self::Output {
-        Real(self.0.algebraic_div(rhs.0))
-    }
-}
-
-impl Div<&Real<f32>> for Real<f32> {
-    type Output = <Real<f32> as Div>::Output;
-
-    fn div(self, rhs: &Real<f32>) -> Self::Output {
-        self + *rhs
-    }
-}
-
-impl Div<Real<f32>> for &Real<f32> {
-    type Output = <Real<f32> as Div>::Output;
-
-    fn div(self, rhs: Real<f32>) -> Self::Output {
-        *self + rhs
-    }
-}
-
-impl Div<&Real<f32>> for &Real<f32> {
-    type Output = <Real<f32> as Div>::Output;
-
-    fn div(self, rhs: &Real<f32>) -> Self::Output {
-        *self + *rhs
-    }
-}
-
-impl DivAssign<Real<f32>> for Real<f32> {
-    fn div_assign(&mut self, rhs: Real<f32>) {
-        *self = *self / rhs
-    }
-}
-
-impl DivAssign<&Real<f32>> for Real<f32> {
-    fn div_assign(&mut self, rhs: &Real<f32>) {
-        *self = *self / *rhs
-    }
-}
-
-impl Rem<Real<f32>> for Real<f32> {
-    type Output = Real<f32>;
-
-    fn rem(self, rhs: Real<f32>) -> Self::Output {
-        Real(self.0.algebraic_rem(rhs.0))
-    }
-}
-
-impl Rem<&Real<f32>> for Real<f32> {
-    type Output = <Real<f32> as Rem>::Output;
-
-    fn rem(self, rhs: &Real<f32>) -> Self::Output {
-        self + *rhs
-    }
-}
-
-impl Rem<Real<f32>> for &Real<f32> {
-    type Output = <Real<f32> as Rem>::Output;
-
-    fn rem(self, rhs: Real<f32>) -> Self::Output {
-        *self + rhs
-    }
-}
-
-impl Rem<&Real<f32>> for &Real<f32> {
-    type Output = <Real<f32> as Rem>::Output;
-
-    fn rem(self, rhs: &Real<f32>) -> Self::Output {
-        *self + *rhs
-    }
-}
-
-impl RemAssign<Real<f32>> for Real<f32> {
-    fn rem_assign(&mut self, rhs: Real<f32>) {
-        *self = *self % rhs
-    }
-}
-
-impl RemAssign<&Real<f32>> for Real<f32> {
-    fn rem_assign(&mut self, rhs: &Real<f32>) {
-        *self = *self % *rhs
-    }
-}
-
-impl Neg for Real<f32> {
-    type Output = Self;
-
-    fn neg(self) -> Self::Output {
-        Real(self.0.neg())
-    }
-}
-
-impl Sum<Real<f32>> for Real<f32> {
-    fn sum<I>(iter: I) -> Real<f32>
-    where
-        I: Iterator<Item = Real<f32>>,
-    {
-        iter.fold(Real(0.0), |acc, x| acc + x)
-    }
-}
-
-impl<'a> Sum<&'a Real<f32>> for Real<f32> {
-    fn sum<I>(iter: I) -> Real<f32>
-    where
-        I: Iterator<Item = &'a Real<f32>>,
-    {
-        iter.fold(Real(0.0), |acc, x| acc + x)
-    }
-}
-
-impl Product<Real<f32>> for Real<f32> {
-    fn product<I>(iter: I) -> Real<f32>
-    where
-        I: Iterator<Item = Real<f32>>,
-    {
-        iter.fold(Real(1.0), |acc, x| acc * x)
-    }
-}
-
-impl<'a> Product<&'a Real<f32>> for Real<f32> {
-    fn product<I>(iter: I) -> Real<f32>
-    where
-        I: Iterator<Item = &'a Real<f32>>,
-    {
-        iter.fold(Real(1.0), |acc, x| acc * x)
     }
 }
 
 // f64
-impl Real<f64> {
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub const fn abs(self) -> Self {
-        Real(self.0.abs())
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub fn acos(self) -> Self {
-        Real(self.0.acos())
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub fn acosh(self) -> Self {
-        Real(self.0.acosh())
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub fn asin(self) -> Self {
-        Real(self.0.asin())
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub fn asinh(self) -> Self {
-        Real(self.0.asinh())
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub fn atan(self) -> Self {
-        Real(self.0.atan())
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub fn atan2(self, other: Self) -> Self {
-        Real(self.0.atan2(other.0))
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub fn atanh(self) -> Self {
-        Real(self.0.atanh())
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub fn cbrt(self) -> Self {
-        Real(self.0.cbrt())
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub const fn ceil(self) -> Self {
-        Real(self.0.ceil())
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub const fn clamp(self, min: Self, max: Self) -> Self {
-        Real(self.0.clamp(min.0, max.0))
-    }
-
-    #[must_use]
-    pub const fn classify(self) -> FpCategory {
-        self.0.classify()
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub const fn copysign(self, sign: Self) -> Self {
-        Real(self.0.copysign(sign.0))
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub fn cos(self) -> Self {
-        Real(self.0.cos())
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub fn cosh(self) -> Self {
-        Real(self.0.cosh())
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub fn div_euclid(self, rhs: Self) -> Self {
-        Real(self.0.div_euclid(rhs.0))
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub fn exp(self) -> Self {
-        Real(self.0.exp())
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub fn exp2(self) -> Self {
-        Real(self.0.exp2())
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub fn exp_m1(self) -> Self {
-        Real(self.0.exp_m1())
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub const fn floor(self) -> Self {
-        Real(self.0.floor())
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub const fn fract(self) -> Self {
-        Real(self.0.fract())
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub fn hypot(self, other: Self) -> Self {
-        Real(self.0.hypot(other.0))
-    }
-
-    #[must_use]
-    pub const fn is_finite(self) -> bool {
-        self.0.is_finite()
-    }
-
-    #[must_use]
-    pub const fn is_infinite(self) -> bool {
-        self.0.is_infinite()
-    }
-
-    #[must_use]
-    pub const fn is_nan(self) -> bool {
-        self.0.is_nan()
-    }
-
-    #[must_use]
-    pub const fn is_normal(self) -> bool {
-        self.0.is_normal()
-    }
-
-    #[must_use]
-    pub const fn is_sign_negative(self) -> bool {
-        self.0.is_sign_negative()
-    }
-
-    #[must_use]
-    pub const fn is_sign_positive(self) -> bool {
-        self.0.is_sign_positive()
-    }
-
-    #[must_use]
-    pub const fn is_subnormal(self) -> bool {
-        self.0.is_subnormal()
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub fn ln(self) -> Self {
-        Real(self.0.ln())
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub fn ln_1p(self) -> Self {
-        Real(self.0.ln_1p())
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub fn log(self, base: Self) -> Self {
-        Real(self.0.log(base.0))
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub fn log2(self) -> Self {
-        Real(self.0.log2())
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub fn log10(self) -> Self {
-        Real(self.0.log10())
-    }
-
-    #[must_use = "this returns the result of the comparison, without modifying either input"]
-    pub const fn max(self, other: Self) -> Self {
-        Real(self.0.max(other.0))
-    }
-
-    #[must_use = "this returns the result of the comparison, without modifying either input"]
-    pub const fn midpoint(self, other: Self) -> Self {
-        Real(self.0.midpoint(other.0))
-    }
-
-    #[must_use = "this returns the result of the comparison, without modifying either input"]
-    pub const fn min(self, other: Self) -> Self {
-        Real(self.0.min(other.0))
-    }
-
-    pub const fn mul_add(self, a: Self, b: Self) -> Self {
-        Real(self.0.mul_add(a.0, b.0))
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub const fn next_down(self) -> Self {
-        Real(self.0.next_down())
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub fn next_up(self) -> Self {
-        Real(self.0.next_up())
-    }
-
-    pub fn powf(self, n: Self) -> Self {
-        Real(self.0.powf(n.0))
-    }
-
-    pub fn powi(self, n: i32) -> Self {
-        Real(self.0.powi(n))
-    }
-
-    #[must_use = "this returns the result of the operation, without modifying the original"]
-    pub const fn recip(self) -> Self {
-        Real(self.0.recip())
-    }
-
-    pub fn rem_euclid(self, rhs: Self) -> Self {
-        Real(self.0.rem_euclid(rhs.0))
-    }
-
-    pub const fn round(self) -> Self {
-        Real(self.0.round())
-    }
-
-    pub const fn round_ties_even(self) -> Self {
-        Real(self.0.round_ties_even())
-    }
-
-    #[must_use = "method returns a new number and does not mutate the original value"]
-    pub const fn signum(self) -> Self {
-        Real(self.0.signum())
-    }
-
-    pub fn sin(self) -> Self {
-        Real(self.0.sin())
-    }
-
-    pub fn sin_cos(self) -> (Self, Self) {
-        let (s, c) = self.0.sin_cos();
-        (Real(s), Real(c))
-    }
+duplicate! {
+    [imp_type; [f32]; [f64]]
+    impl Add<Real<imp_type>> for Real<imp_type> {
+        type Output = Real<imp_type>;
 
-    pub fn sinh(self) -> Self {
-        Real(self.0.sinh())
+        fn add(self, rhs: Real<imp_type>) -> Self::Output {
+            Real(self.0.algebraic_add(rhs.0))
+        }
     }
 
-    pub fn sqrt(self) -> Self {
-        Real(self.0.sqrt())
-    }
-
-    pub fn tan(self) -> Self {
-        Real(self.0.tan())
-    }
-
-    pub fn tanh(self) -> Self {
-        Real(self.0.tanh())
-    }
-
-    #[must_use = "this returns the result of the comparison, without modifying either input"]
-    pub const fn to_be_bytes(self) -> [u8; 8] {
-        self.0.to_be_bytes()
-    }
+    impl Add<&Real<imp_type>> for Real<imp_type> {
+        type Output = <Real<imp_type> as Add>::Output;
 
-    #[must_use = "this returns the result of the comparison, without modifying either input"]
-    pub const fn to_bits(self) -> u64 {
-        self.0.to_bits()
+        fn add(self, rhs: &Real<imp_type>) -> Self::Output {
+            self + *rhs
+        }
     }
 
-    #[must_use = "this returns the result of the operation, without modifying the original"]
-    pub const fn to_degrees(self) -> Self {
-        Real(self.0.to_degrees())
-    }
+    impl Add<Real<imp_type>> for &Real<imp_type> {
+        type Output = <Real<imp_type> as Add>::Output;
 
-    #[must_use = "this returns the result of the comparison, without modifying either input"]
-    pub const fn to_le_bytes(self) -> [u8; 8] {
-        self.0.to_le_bytes()
+        fn add(self, rhs: Real<imp_type>) -> Self::Output {
+            *self + rhs
+        }
     }
 
-    #[must_use = "this returns the result of the comparison, without modifying either input"]
-    pub const fn to_ne_bytes(self) -> [u8; 8] {
-        self.0.to_ne_bytes()
-    }
+    impl Add<&Real<imp_type>> for &Real<imp_type> {
+        type Output = <Real<imp_type> as Add>::Output;
 
-    #[must_use = "this returns the result of the operation, without modifying the original"]
-    pub const fn to_radians(self) -> Self {
-        Real(self.0.to_radians())
+        fn add(self, rhs: &Real<imp_type>) -> Self::Output {
+            *self + *rhs
+        }
     }
 
-    #[must_use]
-    pub fn total_cmp(self, other: &Self) -> Ordering {
-        self.0.total_cmp(&other.0)
+    impl AddAssign<Real<imp_type>> for Real<imp_type> {
+        fn add_assign(&mut self, rhs: Real<imp_type>) {
+            *self = *self + rhs
+        }
     }
 
-    pub const fn trunc(self) -> Self {
-        Real(self.0.trunc())
+    impl AddAssign<&Real<imp_type>> for Real<imp_type> {
+        fn add_assign(&mut self, rhs: &Real<imp_type>) {
+            *self = *self + *rhs
+        }
     }
-}
 
-impl Add<Real<f64>> for Real<f64> {
-    type Output = Real<f64>;
+    impl Sub<Real<imp_type>> for Real<imp_type> {
+        type Output = Real<imp_type>;
 
-    fn add(self, rhs: Real<f64>) -> Self::Output {
-        Real(self.0.algebraic_add(rhs.0))
+        fn sub(self, rhs: Real<imp_type>) -> Self::Output {
+            Real(self.0.algebraic_sub(rhs.0))
+        }
     }
-}
 
-impl Add<&Real<f64>> for Real<f64> {
-    type Output = <Real<f64> as Add>::Output;
+    impl Sub<&Real<imp_type>> for Real<imp_type> {
+        type Output = <Real<imp_type> as Sub>::Output;
 
-    fn add(self, rhs: &Real<f64>) -> Self::Output {
-        self + *rhs
+        fn sub(self, rhs: &Real<imp_type>) -> Self::Output {
+            self + *rhs
+        }
     }
-}
 
-impl Add<Real<f64>> for &Real<f64> {
-    type Output = <Real<f64> as Add>::Output;
+    impl Sub<Real<imp_type>> for &Real<imp_type> {
+        type Output = <Real<imp_type> as Sub>::Output;
 
-    fn add(self, rhs: Real<f64>) -> Self::Output {
-        *self + rhs
+        fn sub(self, rhs: Real<imp_type>) -> Self::Output {
+            *self + rhs
+        }
     }
-}
-
-impl Add<&Real<f64>> for &Real<f64> {
-    type Output = <Real<f64> as Add>::Output;
 
-    fn add(self, rhs: &Real<f64>) -> Self::Output {
-        *self + *rhs
-    }
-}
+    impl Sub<&Real<imp_type>> for &Real<imp_type> {
+        type Output = <Real<imp_type> as Sub>::Output;
 
-impl AddAssign<Real<f64>> for Real<f64> {
-    fn add_assign(&mut self, rhs: Real<f64>) {
-        *self = *self + rhs
+        fn sub(self, rhs: &Real<imp_type>) -> Self::Output {
+            *self + *rhs
+        }
     }
-}
 
-impl AddAssign<&Real<f64>> for Real<f64> {
-    fn add_assign(&mut self, rhs: &Real<f64>) {
-        *self = *self + *rhs
+    impl SubAssign<Real<imp_type>> for Real<imp_type> {
+        fn sub_assign(&mut self, rhs: Real<imp_type>) {
+            *self = *self - rhs
+        }
     }
-}
-
-impl Sub<Real<f64>> for Real<f64> {
-    type Output = Real<f64>;
 
-    fn sub(self, rhs: Real<f64>) -> Self::Output {
-        Real(self.0.algebraic_sub(rhs.0))
+    impl SubAssign<&Real<imp_type>> for Real<imp_type> {
+        fn sub_assign(&mut self, rhs: &Real<imp_type>) {
+            *self = *self - *rhs
+        }
     }
-}
 
-impl Sub<&Real<f64>> for Real<f64> {
-    type Output = <Real<f64> as Sub>::Output;
+    impl Mul<Real<imp_type>> for Real<imp_type> {
+        type Output = Real<imp_type>;
 
-    fn sub(self, rhs: &Real<f64>) -> Self::Output {
-        self + *rhs
+        fn mul(self, rhs: Real<imp_type>) -> Self::Output {
+            Real(self.0.algebraic_mul(rhs.0))
+        }
     }
-}
 
-impl Sub<Real<f64>> for &Real<f64> {
-    type Output = <Real<f64> as Sub>::Output;
+    impl Mul<&Real<imp_type>> for Real<imp_type> {
+        type Output = <Real<imp_type> as Mul>::Output;
 
-    fn sub(self, rhs: Real<f64>) -> Self::Output {
-        *self + rhs
+        fn mul(self, rhs: &Real<imp_type>) -> Self::Output {
+            self + *rhs
+        }
     }
-}
 
-impl Sub<&Real<f64>> for &Real<f64> {
-    type Output = <Real<f64> as Sub>::Output;
+    impl Mul<Real<imp_type>> for &Real<imp_type> {
+        type Output = <Real<imp_type> as Mul>::Output;
 
-    fn sub(self, rhs: &Real<f64>) -> Self::Output {
-        *self + *rhs
+        fn mul(self, rhs: Real<imp_type>) -> Self::Output {
+            *self + rhs
+        }
     }
-}
 
-impl SubAssign<Real<f64>> for Real<f64> {
-    fn sub_assign(&mut self, rhs: Real<f64>) {
-        *self = *self - rhs
-    }
-}
+    impl Mul<&Real<imp_type>> for &Real<imp_type> {
+        type Output = <Real<imp_type> as Mul>::Output;
 
-impl SubAssign<&Real<f64>> for Real<f64> {
-    fn sub_assign(&mut self, rhs: &Real<f64>) {
-        *self = *self - *rhs
+        fn mul(self, rhs: &Real<imp_type>) -> Self::Output {
+            *self + *rhs
+        }
     }
-}
-
-impl Mul<Real<f64>> for Real<f64> {
-    type Output = Real<f64>;
 
-    fn mul(self, rhs: Real<f64>) -> Self::Output {
-        Real(self.0.algebraic_mul(rhs.0))
+    impl MulAssign<Real<imp_type>> for Real<imp_type> {
+        fn mul_assign(&mut self, rhs: Real<imp_type>) {
+            *self = *self * rhs
+        }
     }
-}
 
-impl Mul<&Real<f64>> for Real<f64> {
-    type Output = <Real<f64> as Mul>::Output;
-
-    fn mul(self, rhs: &Real<f64>) -> Self::Output {
-        self + *rhs
+    impl MulAssign<&Real<imp_type>> for Real<imp_type> {
+        fn mul_assign(&mut self, rhs: &Real<imp_type>) {
+            *self = *self * *rhs
+        }
     }
-}
 
-impl Mul<Real<f64>> for &Real<f64> {
-    type Output = <Real<f64> as Mul>::Output;
+    impl Div<Real<imp_type>> for Real<imp_type> {
+        type Output = Real<imp_type>;
 
-    fn mul(self, rhs: Real<f64>) -> Self::Output {
-        *self + rhs
+        fn div(self, rhs: Real<imp_type>) -> Self::Output {
+            Real(self.0.algebraic_div(rhs.0))
+        }
     }
-}
 
-impl Mul<&Real<f64>> for &Real<f64> {
-    type Output = <Real<f64> as Mul>::Output;
+    impl Div<&Real<imp_type>> for Real<imp_type> {
+        type Output = <Real<imp_type> as Div>::Output;
 
-    fn mul(self, rhs: &Real<f64>) -> Self::Output {
-        *self + *rhs
+        fn div(self, rhs: &Real<imp_type>) -> Self::Output {
+            self + *rhs
+        }
     }
-}
 
-impl MulAssign<Real<f64>> for Real<f64> {
-    fn mul_assign(&mut self, rhs: Real<f64>) {
-        *self = *self * rhs
-    }
-}
+    impl Div<Real<imp_type>> for &Real<imp_type> {
+        type Output = <Real<imp_type> as Div>::Output;
 
-impl MulAssign<&Real<f64>> for Real<f64> {
-    fn mul_assign(&mut self, rhs: &Real<f64>) {
-        *self = *self * *rhs
+        fn div(self, rhs: Real<imp_type>) -> Self::Output {
+            *self + rhs
+        }
     }
-}
 
-impl Div<Real<f64>> for Real<f64> {
-    type Output = Real<f64>;
+    impl Div<&Real<imp_type>> for &Real<imp_type> {
+        type Output = <Real<imp_type> as Div>::Output;
 
-    fn div(self, rhs: Real<f64>) -> Self::Output {
-        Real(self.0.algebraic_div(rhs.0))
+        fn div(self, rhs: &Real<imp_type>) -> Self::Output {
+            *self + *rhs
+        }
     }
-}
 
-impl Div<&Real<f64>> for Real<f64> {
-    type Output = <Real<f64> as Div>::Output;
-
-    fn div(self, rhs: &Real<f64>) -> Self::Output {
-        self + *rhs
+    impl DivAssign<Real<imp_type>> for Real<imp_type> {
+        fn div_assign(&mut self, rhs: Real<imp_type>) {
+            *self = *self / rhs
+        }
     }
-}
-
-impl Div<Real<f64>> for &Real<f64> {
-    type Output = <Real<f64> as Div>::Output;
 
-    fn div(self, rhs: Real<f64>) -> Self::Output {
-        *self + rhs
+    impl DivAssign<&Real<imp_type>> for Real<imp_type> {
+        fn div_assign(&mut self, rhs: &Real<imp_type>) {
+            *self = *self / *rhs
+        }
     }
-}
 
-impl Div<&Real<f64>> for &Real<f64> {
-    type Output = <Real<f64> as Div>::Output;
+    impl Rem<Real<imp_type>> for Real<imp_type> {
+        type Output = Real<imp_type>;
 
-    fn div(self, rhs: &Real<f64>) -> Self::Output {
-        *self + *rhs
+        fn rem(self, rhs: Real<imp_type>) -> Self::Output {
+            Real(self.0.algebraic_rem(rhs.0))
+        }
     }
-}
 
-impl DivAssign<Real<f64>> for Real<f64> {
-    fn div_assign(&mut self, rhs: Real<f64>) {
-        *self = *self / rhs
-    }
-}
+    impl Rem<&Real<imp_type>> for Real<imp_type> {
+        type Output = <Real<imp_type> as Rem>::Output;
 
-impl DivAssign<&Real<f64>> for Real<f64> {
-    fn div_assign(&mut self, rhs: &Real<f64>) {
-        *self = *self / *rhs
+        fn rem(self, rhs: &Real<imp_type>) -> Self::Output {
+            self + *rhs
+        }
     }
-}
 
-impl Rem<Real<f64>> for Real<f64> {
-    type Output = Real<f64>;
+    impl Rem<Real<imp_type>> for &Real<imp_type> {
+        type Output = <Real<imp_type> as Rem>::Output;
 
-    fn rem(self, rhs: Real<f64>) -> Self::Output {
-        Real(self.0.algebraic_rem(rhs.0))
+        fn rem(self, rhs: Real<imp_type>) -> Self::Output {
+            *self + rhs
+        }
     }
-}
 
-impl Rem<&Real<f64>> for Real<f64> {
-    type Output = <Real<f64> as Rem>::Output;
+    impl Rem<&Real<imp_type>> for &Real<imp_type> {
+        type Output = <Real<imp_type> as Rem>::Output;
 
-    fn rem(self, rhs: &Real<f64>) -> Self::Output {
-        self + *rhs
+        fn rem(self, rhs: &Real<imp_type>) -> Self::Output {
+            *self + *rhs
+        }
     }
-}
-
-impl Rem<Real<f64>> for &Real<f64> {
-    type Output = <Real<f64> as Rem>::Output;
 
-    fn rem(self, rhs: Real<f64>) -> Self::Output {
-        *self + rhs
+    impl RemAssign<Real<imp_type>> for Real<imp_type> {
+        fn rem_assign(&mut self, rhs: Real<imp_type>) {
+            *self = *self % rhs
+        }
     }
-}
 
-impl Rem<&Real<f64>> for &Real<f64> {
-    type Output = <Real<f64> as Rem>::Output;
-
-    fn rem(self, rhs: &Real<f64>) -> Self::Output {
-        *self + *rhs
+    impl RemAssign<&Real<imp_type>> for Real<imp_type> {
+        fn rem_assign(&mut self, rhs: &Real<imp_type>) {
+            *self = *self % *rhs
+        }
     }
-}
 
-impl RemAssign<Real<f64>> for Real<f64> {
-    fn rem_assign(&mut self, rhs: Real<f64>) {
-        *self = *self % rhs
-    }
-}
+    impl Neg for Real<imp_type> {
+        type Output = Self;
 
-impl RemAssign<&Real<f64>> for Real<f64> {
-    fn rem_assign(&mut self, rhs: &Real<f64>) {
-        *self = *self % *rhs
+        fn neg(self) -> Self::Output {
+            Real(self.0.neg())
+        }
     }
-}
 
-impl Neg for Real<f64> {
-    type Output = Self;
-
-    fn neg(self) -> Self::Output {
-        Real(self.0.neg())
+    impl Sum<Real<imp_type>> for Real<imp_type> {
+        fn sum<I>(iter: I) -> Real<imp_type>
+        where
+            I: Iterator<Item = Real<imp_type>>,
+        {
+            iter.fold(Real(0.0), |acc, x| acc + x)
+        }
     }
-}
 
-impl Sum<Real<f64>> for Real<f64> {
-    fn sum<I>(iter: I) -> Real<f64>
-    where
-        I: Iterator<Item = Real<f64>>,
-    {
-        iter.fold(Real(0.0), |acc, x| acc + x)
+    impl<'a> Sum<&'a Real<imp_type>> for Real<imp_type> {
+        fn sum<I>(iter: I) -> Real<imp_type>
+        where
+            I: Iterator<Item = &'a Real<imp_type>>,
+        {
+            iter.fold(Real(0.0), |acc, x| acc + x)
+        }
     }
-}
 
-impl<'a> Sum<&'a Real<f64>> for Real<f64> {
-    fn sum<I>(iter: I) -> Real<f64>
-    where
-        I: Iterator<Item = &'a Real<f64>>,
-    {
-        iter.fold(Real(0.0), |acc, x| acc + x)
+    impl Product<Real<imp_type>> for Real<imp_type> {
+        fn product<I>(iter: I) -> Real<imp_type>
+        where
+            I: Iterator<Item = Real<imp_type>>,
+        {
+            iter.fold(Real(1.0), |acc, x| acc * x)
+        }
     }
-}
 
-impl Product<Real<f64>> for Real<f64> {
-    fn product<I>(iter: I) -> Real<f64>
-    where
-        I: Iterator<Item = Real<f64>>,
-    {
-        iter.fold(Real(1.0), |acc, x| acc * x)
+    impl<'a> Product<&'a Real<imp_type>> for Real<imp_type> {
+        fn product<I>(iter: I) -> Real<imp_type>
+        where
+            I: Iterator<Item = &'a Real<imp_type>>,
+        {
+            iter.fold(Real(1.0), |acc, x| acc * x)
+        }
     }
-}
 
-impl<'a> Product<&'a Real<f64>> for Real<f64> {
-    fn product<I>(iter: I) -> Real<f64>
-    where
-        I: Iterator<Item = &'a Real<f64>>,
-    {
-        iter.fold(Real(1.0), |acc, x| acc * x)
-    }
 }
