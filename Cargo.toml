@@ -1,5 +1,5 @@
 [package]
-name = "real_float"
+name = "algebraic_float"
 version = "0.1.0"
 edition = "2024"
 
