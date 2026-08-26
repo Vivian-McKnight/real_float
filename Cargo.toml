@@ -1,5 +1,8 @@
 [package]
 name = "algebraic_float"
+description = "Wrapper type over floating point numbers that treats them like real numbers. This allows the compiler to exploit algebraic properties of the real numbers like associativity etc. This can result in shallower dependency depth in the output assembly code, or in the case of loops can help the compiler to perform SIMD vectorisation."
+repository = "https://github.com/Vivian-McKnight/real_float"
+license = "MIT OR Apache-2.0"
 version = "0.1.0"
 edition = "2024"
 
