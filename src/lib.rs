@@ -1,3 +1,5 @@
+#![no_std]
+
 #[cfg(feature = "num")]
 pub mod num;
 
@@ -9,6 +11,9 @@ use core::{
 };
 use duplicate::{duplicate, duplicate_item};
 
+pub type af32 = Real<f32>;
+pub type af64 = Real<f64>;
+
 /// Wrapper type over floating point numbers that treats them like real numbers. This allows
 /// the compiler to exploit algebraic properties of the real numbers like associativity etc.
 /// This can result in shallower dependency depth in the output assembly code, or in the case
@@ -19,11 +24,11 @@ use duplicate::{duplicate, duplicate_item};
 pub struct Real<T>(pub T);
 
 #[duplicate_item(
-    impl_type to_bits_type byte_length;
-    [f32]     [u32]        [4];
-    [f64]     [u64]        [8];
+    imp_type to_bits_type byte_length;
+    [f32]    [u32]        [4];
+    [f64]    [u64]        [8];
 )]
-impl Real<impl_type> {
+impl Real<imp_type> {
     #[must_use = "method returns a new number and does not mutate the original value"]
     pub const fn abs(self) -> Self {
         Real(self.0.abs())
@@ -331,7 +336,6 @@ impl Real<impl_type> {
     }
 }
 
-// f64
 duplicate! {
     [imp_type; [f32]; [f64]]
     impl Add<Real<imp_type>> for Real<imp_type> {
@@ -597,5 +601,4 @@ duplicate! {
             iter.fold(Real(1.0), |acc, x| acc * x)
         }
     }
-
 }
