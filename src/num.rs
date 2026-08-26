@@ -600,5 +600,4 @@ duplicate! {
             self.powf(rhs)
         }
     }
-
 }

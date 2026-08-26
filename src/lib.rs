@@ -602,9 +602,3 @@ duplicate! {
         }
     }
 }
-
-fn test() {
-    let a = [Real(0.0), Real(1.0)];
-
-    let b = a.iter().sum::<Real<f64>>();
-}
