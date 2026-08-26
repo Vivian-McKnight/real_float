@@ -11,8 +11,8 @@ use core::{
 };
 use duplicate::{duplicate, duplicate_item};
 
-pub type af32 = Real<f32>;
-pub type af64 = Real<f64>;
+pub type rf32 = Real<f32>;
+pub type rf64 = Real<f64>;
 
 /// Wrapper type over floating point numbers that treats them like real numbers. This allows
 /// the compiler to exploit algebraic properties of the real numbers like associativity etc.
